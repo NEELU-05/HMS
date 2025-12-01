@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Patients - HealthPlus{% endblock %}
+
+{% block content %}
+<div class="welcome-header">
+    <h1>Patient Management</h1>
+</div>
+
+<div class="data-table">
+    <div class="table-header">
+        <h2 class="section-title">All Patients</h2>
+        <button class="btn btn-primary" onclick="openAddPatientModal()">➕ Add New Patient</button>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>AGE</th>
+                    <th>GENDER</th>
+                    <th>CONTACT</th>
+                    <th>ASSIGNED DOCTOR</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody id="patientsTableBody">
+                {% for patient in patients %}
+                <tr>
+                    <td>{{ patient.id }}</td>
+                    <td>{{ patient.name }}</td>
+                    <td>{{ patient.age }}</td>
+                    <td>{{ patient.gender }}</td>
+                    <td>{{ patient.contact }}</td>
+                    <td>
+                        {% if patient.assigned_doctor_id %}
+                        {% for doctor in doctors %}
+                        {% if doctor.id == patient.assigned_doctor_id %}
+                        {{ doctor.name }}
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        Not assigned
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-secondary"
+                                onclick="editPatient({{ patient.id }})">Edit</button>
+                            <button class="btn btn-sm btn-danger"
+                                onclick="deletePatient({{ patient.id }})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add/Edit Patient Modal -->
+<div id="patientModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add New Patient</h2>
+            <button class="close-btn" onclick="closePatientModal()">×</button>
+        </div>
+        <form id="patientForm">
+            <input type="hidden" id="patientId">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" required>
+            </div>
+            <div class="form-group">
+                <label for="contact">Contact</label>
+                <input type="text" id="contact" required>
+            </div>
+            <div class="form-group">
+                <label for="medical_history">Medical History</label>
+                <textarea id="medical_history"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="assigned_doctor_id">Assigned Doctor</label>
+                <select id="assigned_doctor_id">
+                    <option value="">Select Doctor</option>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.name }} - {{ doctor.specialization }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closePatientModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Patient</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/patients.js') }}"></script>
+{% endblock %}

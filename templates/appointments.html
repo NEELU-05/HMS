@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments - HealthPlus{% endblock %}
+
+{% block content %}
+<div class="welcome-header">
+    <h1>Appointment Management</h1>
+</div>
+
+<div class="data-table">
+    <div class="table-header">
+        <h2 class="section-title">All Appointments</h2>
+        <button class="btn btn-primary" onclick="openAddAppointmentModal()">➕ Book Appointment</button>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>PATIENT</th>
+                    <th>DOCTOR</th>
+                    <th>DATE</th>
+                    <th>TIME</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.id }}</td>
+                    <td>{{ appointment.patient.name }}</td>
+                    <td>{{ appointment.doctor.name }}</td>
+                    <td>{{ appointment.appointment_date }}</td>
+                    <td>{{ appointment.appointment_time }}</td>
+                    <td>
+                        <span class="status-badge {{ appointment.status.lower() }}">
+                            {{ appointment.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            {% if appointment.status != 'Cancelled' %}
+                            <button class="btn btn-sm btn-danger"
+                                onclick="cancelAppointment({{ appointment.id }})">Cancel</button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Appointment Modal -->
+<div id="appointmentModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Book Appointment</h2>
+            <button class="close-btn" onclick="closeAppointmentModal()">×</button>
+        </div>
+        <form id="appointmentForm">
+            <div class="form-group">
+                <label for="patient_id">Patient</label>
+                <select id="patient_id" required>
+                    <option value="">Select Patient</option>
+                    {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="doctor_id">Doctor</label>
+                <select id="doctor_id" required>
+                    <option value="">Select Doctor</option>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.name }} - {{ doctor.specialization }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="appointment_date">Date</label>
+                <input type="date" id="appointment_date" required>
+            </div>
+            <div class="form-group">
+                <label for="appointment_time">Time</label>
+                <input type="time" id="appointment_time" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeAppointmentModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Book Appointment</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/appointments.js') }}"></script>
+{% endblock %}

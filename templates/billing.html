@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Billing - HealthPlus{% endblock %}
+
+{% block content %}
+<div class="welcome-header">
+    <h1>Billing Management</h1>
+</div>
+
+<div class="data-table">
+    <div class="table-header">
+        <h2 class="section-title">All Bills</h2>
+        <button class="btn btn-primary" onclick="openAddBillModal()">➕ Generate Bill</button>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>PATIENT</th>
+                    <th>SERVICES</th>
+                    <th>AMOUNT</th>
+                    <th>DATE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bill in bills %}
+                <tr>
+                    <td>{{ bill.id }}</td>
+                    <td>{{ bill.patient.name }}</td>
+                    <td>{{ bill.services }}</td>
+                    <td>${{ "%.2f"|format(bill.amount) }}</td>
+                    <td>{{ bill.billing_date.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <span class="status-badge {{ bill.status.lower() }}">
+                            {{ bill.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            {% if bill.status == 'Pending' %}
+                            <button class="btn btn-sm btn-primary" onclick="payBill({{ bill.id }})">Mark as
+                                Paid</button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Bill Modal -->
+<div id="billModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Generate Bill</h2>
+            <button class="close-btn" onclick="closeBillModal()">×</button>
+        </div>
+        <form id="billForm">
+            <div class="form-group">
+                <label for="patient_id">Patient</label>
+                <select id="patient_id" required>
+                    <option value="">Select Patient</option>
+                    {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="services">Services</label>
+                <textarea id="services" placeholder="e.g., Consultation, X-Ray, Blood Test" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount ($)</label>
+                <input type="number" id="amount" step="0.01" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeBillModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Generate Bill</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/billing.js') }}"></script>
+{% endblock %}

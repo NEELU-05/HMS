@@ -1,0 +1,39 @@
+<!-- AI Chat Widget -->
+<div id="aiChatWidget" class="ai-chat-widget">
+    <!-- Chat Toggle Button -->
+    <button id="aiChatToggle" class="ai-chat-toggle">
+        <span class="ai-icon">✨</span>
+        <span class="ai-text">AI Assistant</span>
+    </button>
+
+    <!-- Chat Window -->
+    <div id="aiChatWindow" class="ai-chat-window" style="display: none;">
+        <div class="ai-chat-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 20px;">🤖</span>
+                <div>
+                    <h3 style="margin: 0; font-size: 16px;">HealthPlus AI</h3>
+                    <span style="font-size: 11px; opacity: 0.8;">Powered by Gemini</span>
+                </div>
+            </div>
+            <button id="aiChatClose" class="close-btn" style="color: white;">×</button>
+        </div>
+
+        <div id="aiChatMessages" class="ai-chat-messages">
+            <div class="ai-message ai-intro">
+                <p>👋 Hi! I'm your AI Assistant. I can help you:</p>
+                <ul style="padding-left: 20px; margin: 5px 0;">
+                    <li>Find patient details</li>
+                    <li>Check doctor schedules</li>
+                    <li>Show hospital stats</li>
+                </ul>
+                <p style="margin-top: 5px;">How can I help you today?</p>
+            </div>
+        </div>
+
+        <div class="ai-chat-input">
+            <input type="text" id="aiChatInputField" placeholder="Ask me anything..." autocomplete="off">
+            <button id="aiChatSend" class="btn btn-primary" style="padding: 8px 16px;">Send</button>
+        </div>
+    </div>
+</div>

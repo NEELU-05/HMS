@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - HOSPITAL MANAGEMENT{% endblock %}
+
+{% block content %}
+<div class="welcome-header">
+    <h1>Welcome back, Piyush!</h1>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <div>
+                <div class="stat-title">Total Patients</div>
+            </div>
+            <div class="stat-icon">👥</div>
+        </div>
+        <div class="stat-value">{{ total_patients }}</div>
+        <div class="stat-change positive">+2.5% this month</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <div>
+                <div class="stat-title">Total Doctors</div>
+            </div>
+            <div class="stat-icon">👨‍⚕️</div>
+        </div>
+        <div class="stat-value">{{ total_doctors }}</div>
+        <div class="stat-change positive">+1.2% this month</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <div>
+                <div class="stat-title">Today's Appointments</div>
+            </div>
+            <div class="stat-icon">📅</div>
+        </div>
+        <div class="stat-value">{{ todays_appointments|length }}</div>
+        <div class="stat-change positive">+5 since yesterday</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <div>
+                <div class="stat-title">Pending Bills</div>
+            </div>
+            <div class="stat-icon">💰</div>
+        </div>
+        <div class="stat-value">${{ "%.2f"|format(total_pending) }}</div>
+        <div class="stat-change negative">-1.0% this month</div>
+    </div>
+</div>
+
+<!-- Content Grid -->
+<div class="content-grid">
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2 class="section-title">Quick Actions</h2>
+        <button class="action-btn primary" onclick="window.location.href='{{ url_for('patients') }}'">
+            <span>➕</span>
+            <span>Add New Patient</span>
+        </button>
+        <button class="action-btn secondary" onclick="window.location.href='{{ url_for('appointments') }}'">
+            <span>📅</span>
+            <span>Schedule Appointment</span>
+        </button>
+        <button class="action-btn secondary" onclick="window.location.href='{{ url_for('billing') }}'">
+            <span>💳</span>
+            <span>Process Bill</span>
+        </button>
+    </div>
+
+    <!-- Today's Appointments -->
+    <div class="appointments-section">
+        <h2 class="section-title">Today's Appointments</h2>
+        <table class="appointments-table">
+            <thead>
+                <tr>
+                    <th>PATIENT NAME</th>
+                    <th>ATTENDING DOCTOR</th>
+                    <th>TIME</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in todays_appointments %}
+                <tr>
+                    <td>{{ appointment.patient.name }}</td>
+                    <td>{{ appointment.doctor.name }}</td>
+                    <td>{{ appointment.appointment_time }}</td>
+                    <td>
+                        <span class="status-badge {{ appointment.status.lower() }}">
+                            {{ appointment.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Doctors - HealthPlus{% endblock %}
+
+{% block content %}
+<div class="welcome-header">
+    <h1>Doctor Management</h1>
+</div>
+
+<div class="data-table">
+    <div class="table-header">
+        <h2 class="section-title">All Doctors</h2>
+        <button class="btn btn-primary" onclick="openAddDoctorModal()">➕ Add New Doctor</button>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>SPECIALIZATION</th>
+                    <th>SCHEDULE</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doctor in doctors %}
+                <tr>
+                    <td>{{ doctor.id }}</td>
+                    <td>{{ doctor.name }}</td>
+                    <td>{{ doctor.specialization }}</td>
+                    <td>{{ doctor.schedule }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-danger"
+                                onclick="deleteDoctor({{ doctor.id }})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Doctor Modal -->
+<div id="doctorModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Doctor</h2>
+            <button class="close-btn" onclick="closeDoctorModal()">×</button>
+        </div>
+        <form id="doctorForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="specialization">Specialization</label>
+                <input type="text" id="specialization" required>
+            </div>
+            <div class="form-group">
+                <label for="schedule">Schedule</label>
+                <input type="text" id="schedule" placeholder="e.g., Mon-Fri 9AM-5PM" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeDoctorModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Doctor</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/doctors.js') }}"></script>
+{% endblock %}
