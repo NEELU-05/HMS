@@ -222,8 +222,21 @@ def ai_chat():
         
         return jsonify({'success': True, 'response': response})
     except Exception as e:
+        error_msg = str(e).lower()
+        
+        # Check if it's a quota/rate limit error
+        if 'quota' in error_msg or 'rate limit' in error_msg or '429' in error_msg or 'resource_exhausted' in error_msg:
+            return jsonify({
+                'success': True,  # Still return success so UI shows the message
+                'response': "🚫 **Free tier limit reached!**\n\nI've used up my daily quota. Please try again tomorrow, or consider upgrading to a paid API plan for unlimited access.\n\nIn the meantime, you can still use all other HMS features! 😊"
+            })
+        
+        # For other errors, show a generic message
         print(f"Error in AI chat: {e}")
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({
+            'success': True,
+            'response': "⚠️ I'm having trouble connecting right now. Please try again in a moment."
+        })
 
 def init_db():
     with app.app_context():
